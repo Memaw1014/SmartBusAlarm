@@ -34,7 +34,7 @@ class DestinationController extends Controller
         $message1 = "Municipality: " . $data['Municipality']; 
         $message2 = "\nBarangay: " . $data['Barangay'];
 
-        return view('confirmation', compact('message1','message2'));
+        return view('map', compact('message1','message2'));
     }
 
     public function map()
@@ -46,34 +46,40 @@ class DestinationController extends Controller
 
     public function selectionPost(Request $request)
     {
-        // Validate the form data
-        $request->validate([
-            'seat_number' => 'required|string', // Assuming 'seat_number' is the name of your button
-        ]);
+        // Get the selected seat value from the form
+        $selectedSeat = $request->input('selected_seat');
 
-        // Get the selected seat number from the form data
-        $selectedSeat = $request->input('seat_number');
+        // Define variables to store messages and redirection URLs
+        $message = '';
+        $redirectTo = '';
 
-        // Perform any specific logic based on the selected seat
+        // Perform logic based on the selected seat
         switch ($selectedSeat) {
-            case 'Seat No. 1':
+            case 'seat1':
                 // Handle logic for Seat No. 1
+                $message = 'You have selected Seat No. 1.';
+                $redirectTo = '/destination'; // Example redirection URL
                 break;
 
-            case 'Seat No. 2':
+            case 'seat2':
                 // Handle logic for Seat No. 2
+                $message = 'You have selected Seat No. 2.';
+                $redirectTo = '/destination'; // Example redirection URL
                 break;
 
             // Add more cases for other seat options if needed
 
             default:
                 // Handle the default case if the selected seat is not recognized
+                $message = 'Invalid seat selection.';
+                $redirectTo = '/selection'; // Redirect back to the selection page
                 break;
         }
 
-        // Redirect to a relevant page or return a view based on the logic
-        return view('confirmation', ['selectedSeat' => $selectedSeat]);
+        // Redirect back or return a response
+        return redirect()->route('destination.show')->with('message', $message);
     }
+
 
     public function submitDestination(Request $request)
     {

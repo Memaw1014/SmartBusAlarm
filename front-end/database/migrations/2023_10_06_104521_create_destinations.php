@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('destinations', function (Blueprint $table) {
             $table->id();
+            $table->string('Barangay');
             $table->string('Municipality');
             $table->string('Barangay');
             $table->timestamps();

@@ -1,19 +1,28 @@
 @extends('layout')
 @section('title', 'Selection')
 @section('content')
-    <div class="container">
-    <form action="{{ route('selection.post') }}" method="POST" class="ms-auto me-auto mt-auto" style="width: 500px">
+<div class="container" style="display: flex; justify-content: center; align-items: center; height: 70vh;">
+    <div style="width: 300px;">
+    <div class="mb-3 d-flex justify-content-center align-items-center">
+        <label class="form-label" style="font-size: 40px;">WELCOME</label>
+    </div>
+    <form action="{{ route('selection.post') }}" method="POST" >
         @csrf
         <div class="mb-3 d-flex justify-content-center align-items-center">
-            <label class="form-label" style="font-size: 50px;">WELCOME</label>
+            <label class="form-label" style="font-size: 25px;">Select Your Seat No.</label>
         </div>
-        
-        <div class="mb-3 d-flex justify-content-center align-items-center">
-            <button type="submit" class="btn btn-primary" name="seat_number" value="Seat No. 1" style="width: 100px">Seat No. 1</button>
-            <hr class="my-0 mx-2" style="height: 20px; width: 170px;">
-            <button type="submit" class="btn btn-primary" name="seat_number" value="Seat No. 2" style="width: 100px">Seat No. 2</button>
+
+        <div class="mb-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <button type="submit" name="selected_seat" value="seat1" class="btn btn-primary" style="width: 120px">
+                    SEAT NO. 1
+                </button>
+                <span class="separator mx-2">|</span>
+                <button type="submit" name="selected_seat" value="seat2" class="btn btn-primary" style="width: 120px">
+                    SEAT NO. 2
+                </button>
+            </div>
         </div>
     </form>
-
-    </div>
-@endsection
+</div>
+@endsection     

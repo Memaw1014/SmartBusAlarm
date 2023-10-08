@@ -6,7 +6,7 @@ use App\Http\Controllers\MapController;
 use App\Http\Controllers\DestinationController;
 
 Route::match(['get', 'post'], '/', function () {
-    return view('login');
+    return view('selection');
 })->name('home');
 Route::get('/login', [AuthManager::class, 'login'])->name('login');
 Route::post('/login', [AuthManager::class, 'loginPost'])->name('login.post');
@@ -23,3 +23,7 @@ Route::get('/map', [DestinationController::class, 'map'])->name('map');
 Route::get('/destination', [DestinationController::class, 'destination'])->name('destination.show');
 Route::post('/destination', [DestinationController::class, 'destinationPost'])->name('destination.post');
 Route::match(['get', 'post'], '/selection', [DestinationController::class, 'selectionPost'])->name('selection.post');
+Route::match(['get', 'post'], '/selection', [DestinationController::class, 'selectionPost'])->name('selection.post');
+Route::get('/fare', function () {
+    return view('faredisplay');
+});
