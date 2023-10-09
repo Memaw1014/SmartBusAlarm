@@ -19,11 +19,11 @@ class AuthManager extends Controller
 
     function loginPost(Request $request){
         $request->validate([
-            'email' => 'required',
+            'Username' => 'required',
             'password' => 'required'
         ]);
         
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('Username', 'password');
         if(Auth::attempt($credentials)){
             return redirect()->intended(route('map'));
         }
@@ -32,12 +32,12 @@ class AuthManager extends Controller
     public function registrationPost(Request $request){
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users',
+            'Username' => 'required',
             'password' => 'required'
         ]);
 
         $data['name'] = $request->name;
-        $data['email'] = $request->email;
+        $data['Username'] = $request->email;
         $data['password'] = Hash::make($request->password);
         $user = User::create($data);
         if(!$user){

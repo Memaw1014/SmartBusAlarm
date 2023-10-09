@@ -12,14 +12,14 @@
             <div class="mb-3">
                 <div class="d-flex flex-column align-items-center">
                     <label class="form-label">Username</label> 
-                    <input type="email" class="form-control" name="email">
+                    <input type="Text" class="form-control" name="Username">
                 </div>
             </div>
 
             <div class="mb-3">
                 <div class="d-flex flex-column align-items-center">
                     <label class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password"> 
+                    <input type="Password" class="form-control" name="password"> 
                 </div>
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100px">Submit</button>

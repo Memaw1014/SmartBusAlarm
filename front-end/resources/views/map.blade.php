@@ -3,9 +3,27 @@
 <head>
     <title>Real-Time Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Style to position the button at the bottom */
+        #backButton, #historyButton {
+            position: absolute;
+            bottom: 20px;
+            padding: 10px 10px; /* Adjust padding as needed */
+            font-size: 16px; /* Adjust font size as needed */
+        }
+        #backButton {
+            left: 20px;
+        }
+        
+        #historyButton {
+            left: 150px;
+        }
+    </style>
 </head>
 <body>
     <div id="map" style="height: 700px;"></div>
+    <button id="backButton" style="z-index: 1000; width: 100px; height: 40px;">BACK</button>>
+    <button id="historyButton" style="z-index: 1000; width: 100px; height: 40px;">HISTORY</button>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
     <script>
@@ -70,6 +88,17 @@
                 alert("Geolocation is not supported by your browser.");
             }
         }
+
+        // Add event listener to the BACK button
+        document.getElementById("backButton").addEventListener("click", function () {
+            // Redirect back to the selection.blade.view URL
+            window.location.href = "http://127.0.0.1:8000";
+        });
+        document.getElementById("historyButton").addEventListener("click", function () {
+            // Redirect to the history.blade.php URL
+            window.location.href = "http://127.0.0.1:8000/history";
+        });
+
         document.addEventListener("DOMContentLoaded", getUserLocation);
     </script>
 </body>

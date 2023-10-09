@@ -15,6 +15,5 @@ class Destination extends Model
     protected $fillable = [
         'Municipality',
         'Barangay',
-
     ];
 }

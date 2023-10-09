@@ -9,8 +9,8 @@
                 <input type="text" class="form-control" name="name">
             </div>
             <div class="mb-3">
-                <label class="form-label">Email address</label>
-                <input type="email" class="form-control" name="email">
+                <label class="form-label">Username</label>
+                <input type="Text" class="form-control" name="Username">
             </div>
             <div class="mb-3">
                 <label class="form-label">Password</label>
