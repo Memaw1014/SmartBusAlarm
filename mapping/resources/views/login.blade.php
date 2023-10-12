@@ -12,7 +12,7 @@
             <div class="mb-3">
                 <div class="d-flex flex-column align-items-center">
                     <label class="form-label">Username</label> 
-                    <input type="email" class="form-control" name="email">
+                    <input type="username" class="form-control" name="username">
                 </div>
             </div>
 

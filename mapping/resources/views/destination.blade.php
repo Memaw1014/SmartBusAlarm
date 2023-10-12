@@ -5,10 +5,17 @@
             <div class="form-inline">
     <div class="container" style="display: flex; justify-content: center; align-items: center; height: 80vh;">
         <div style="width: 600px;">
-        <div class="mb-3" style="display: flex; justify-content: center; align-items: center; height: 10vh;">
-            <label class="form-label" style="font-size: 40px;">SELECT YOUR DESTINATION</label>
+        <div class="mb-3">
+            <div class="d-flex flex-column align-items-center">
+                <label class="form-label" style="font-size: 40px;">SELECT YOUR DESTINATION</label>
+            </div>
         </div>
-            <form action="{{ route('destination.post') }}" method="POST">
+        <form action="{{ route('destination.post', ['selected_seat' => $selectedSeat]) }}" method="POST">
+        <div class="mb-3" style="display: flex; justify-content: center; align-items: center; height: 10vh;">
+            <div style="width: 200px;">
+                <input type="text" class="form-control" name="selected_seat" value="{{ $selectedSeat }}">
+            </div>
+        </div>
                 @csrf
                 <div class="mb-3" style="display: flex; justify-content: center; align-items: center; height: 30vh;">
                     <div class="d-flex flex-column align-items-center height: 30vh;">

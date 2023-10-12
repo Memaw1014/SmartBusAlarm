@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('FROM_Municipality');
             $table->string('TO_Municipality');
             $table->string('Barangay');
+            $table->string('selected_seat');
             $table->timestamps();
         });
     }

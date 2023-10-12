@@ -16,6 +16,7 @@ class Destination extends Model
         'FROM_Municipality',
         'TO_Municipality',
         'Barangay',
+        'selected_seat'
 
     ];
 }
