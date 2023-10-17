@@ -13,14 +13,14 @@
                 <form action="{{ route('destination.post', ['selected_seat' => $selectedSeat]) }}" method="POST">
                     <div class="mb-3" style="display: flex; justify-content: center; align-items: center; height: 10vh;">
                         <div style="width: 200px;">
-                            <input type="text" class="form-control" name="selected_seat" value="{{ $selectedSeat }}">
+                            <input type="text"  class="form-control" name="selected_seat" value="{{ $selectedSeat }}" disabled>
                         </div>
                     </div>
                     @csrf
                     <div class="mb-3" style="display: flex; justify-content: center; align-items: center; height: 8vh;">
                             <div style="width: 300px;">
                                 <label class="form-label">FROM: MUNICIPALITY</label>
-                                <select class="form-control" name="FROM_Municipality" id="municipalitySelect">
+                                <select class="form-control" name="FROM_Municipality" id="municipalitySelect" disabled>
                                     @foreach ($from_municipalities as $municipality1)
                                         <option value="{{ $municipality1->FROM_Municipality }}">{{ $municipality1->FROM_Municipality }}</option>
                                     @endforeach
@@ -34,6 +34,7 @@
                             <div style="width: 300px;">
                                 <label class="form-label">TO: MUNICIPALITY</label>
                                 <select class="form-control" name="TO_Municipality" id="toMunicipalitySelect" onchange="updateBarangayOptions()">
+                                <option value="" selected disabled>Select Municipality</option>
                                     @foreach ($to_municipalities as $municipality2)
                                         <option value="{{ $municipality2->TO_Municipality }}">{{ $municipality2->TO_Municipality }}</option>
                                     @endforeach
@@ -44,6 +45,7 @@
                             <div style="width: 300px;">
                                 <label class="form-label">TO: BARANGAY</label>
                                 <select class="form-control" name="Barangay" id="barangaySelect">
+                                
                                     <!-- This select will be populated dynamically using JavaScript -->
                                 </select>
                             </div>
@@ -65,8 +67,11 @@
                     </div>
                 </form>
                 <script>
+
                     function updateBarangayOptions() {
+
                         var selectedMunicipalityId = document.getElementById('toMunicipalitySelect').value;
+                            
                         var barangaySelect = document.getElementById('barangaySelect');
                         while (barangaySelect.options.length > 0) {
                             barangaySelect.remove(0);
@@ -74,6 +79,7 @@
                         var defaultOption = document.createElement('option');
                         defaultOption.text = 'Select Barangay';
                         defaultOption.value = '';
+                        //defaultOption.disabled = true;
                         barangaySelect.add(defaultOption);
                         @foreach ($barangays as $barangay)
                             @if ($barangay->TO_Municipality === 'Sogod')

@@ -21,7 +21,6 @@ Route::get('/map', [DestinationController::class, 'map'])->name('map');
 Route::get('/destination', [DestinationController::class, 'destination'])->name('destination.show');
 Route::post('/destination/{selected_seat}', [DestinationController::class, 'destinationPost'])->name('destination.post');
 Route::match(['get', 'post'], '/selection', [DestinationController::class, 'selectionPost'])->name('selection.post');
-Route::get('/history', 'HistoryController@index');
 Route::get('/destination', [DestinationController::class, 'destination'])->name('show-destination');
 Route::post('/destination', [DestinationController::class, 'destinationPost'])->name('store-data');
 Route::get('/table', [DestinationController::class, 'displayTable'])->name('show-table');
