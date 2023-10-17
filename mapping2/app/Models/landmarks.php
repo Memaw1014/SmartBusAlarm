@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Municipalities extends Model
+class landmarks extends Model
 {
     use HasFactory;
 
-    protected $table = "all_municipality";
+    protected $table = "landmark";
 
     /**
      * The attributes that are mass assignable.
@@ -17,8 +17,8 @@ class Municipalities extends Model
      * @var array
      */
     protected $fillable = [
-        'Municipality',
-        'Latitude',
-        'Longitude',
+        'TO_Municipality',
+        'Barangay',
+        'Landmark',
     ];
 }

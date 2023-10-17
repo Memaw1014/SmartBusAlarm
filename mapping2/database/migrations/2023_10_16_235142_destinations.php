@@ -10,10 +10,11 @@ return new class extends Migration
     {
         Schema::create('destinations', function (Blueprint $table) {
             $table->id();
+            $table->string('selected_seat');
             $table->string('FROM_Municipality');
             $table->string('TO_Municipality');
             $table->string('Barangay');
-            $table->string('selected_seat');
+            $table->string('Landmark');
             $table->timestamps();
         });
     }

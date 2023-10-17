@@ -27,7 +27,7 @@ class AuthManager extends Controller
         if(Auth::attempt($credentials)){
             return redirect()->intended(route('map'));
         }
-        return redirect(route('login'))->with("error", "Login details are not valid");
+        return redirect(route('map'))->with("error", "Login details are not valid");
     }
     public function registrationPost(Request $request){
         $request->validate([
@@ -37,7 +37,7 @@ class AuthManager extends Controller
         ]);
 
         $data['name'] = $request->name;
-        $data['username'] = $request->email;
+        $data['username'] = $request->username;
         $data['password'] = Hash::make($request->password);
         $user = User::create($data);
         if(!$user){

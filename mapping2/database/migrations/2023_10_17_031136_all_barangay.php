@@ -13,31 +13,31 @@ return new class extends Migration
         Schema::create('all_barangay', function (Blueprint $table) {
             $table->id();
             $table->string('Barangay');
-            $table->string('Municipality_ID');
+            $table->string('TO_Municipality');
             $table->timestamps();
         });
 
         $barangaySOGOD = [
-            'Zone 2', 'San Jose', 'Tampoong'
+            'Zone 3','Zone 2', 'San Jose', 'Tampoong'
         ];
 
         $barangaySOGOD = array_map(function ($barangay) {
             return [
                 'Barangay' => $barangay,
-                'Municipality_ID' => '1',
+                'TO_Municipality' => 'Sogod',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }, $barangaySOGOD);
 
         $barangayBONTOC = [
-            'Casao', 'Talisay', 'Poblacion', 'Santo Niño', 'Divisoria', 'Union'
+            'Sta. Cruz','Casao', 'Talisay', 'Poblacion', 'Santo Niño', 'Divisoria', 'Union'
         ];
 
         $barangayBONTOC = array_map(function ($barangay) {
             return [
                 'Barangay' => $barangay,
-                'Municipality_ID' => '2',
+                'TO_Municipality' => 'Bontoc',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -51,7 +51,7 @@ return new class extends Migration
         $barangayTO = array_map(function ($barangay) {
             return [
                 'Barangay' => $barangay,
-                'Municipality_ID' => '3',
+                'TO_Municipality' => 'Tomas Oppus',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -65,7 +65,7 @@ return new class extends Migration
         $barangayMALITBOG = array_map(function ($barangay) {
             return [
                 'Barangay' => $barangay,
-                'Municipality_ID' => '4',
+                'TO_Municipality' => 'Malitbog',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -78,21 +78,21 @@ return new class extends Migration
         $barangayPADREBURGOS = array_map(function ($barangay) {
             return [
                 'Barangay' => $barangay,
-                'Municipality_ID' => '5',
+                'TO_Municipality' => 'Padre Burgos',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }, $barangayPADREBURGOS);
 
         $barangayMACROHON = [
-            'San Roque', 'Asuncion', 'San Roque', 'Asuncion', 'Lower Villa Jacinta', 'Flodeliz', 'Buscayan', 'Canlusay', 
+            'San Roque', 'Asuncion', 'Lower Villa Jacinta', 'Flodeliz', 'Buscayan', 'Canlusay', 
             'Aguinaldo', 'Molopolo', 'Santa Cruz', 'San Vicente', 'San Rosario', 'Rizal', 'Mohon', 'San Joaquin', 'Amparo', 'Ichon'
         ];
 
         $barangayMACROHON = array_map(function ($barangay) {
             return [
                 'Barangay' => $barangay,
-                'Municipality_ID' => '6',
+                'TO_Municipality' => 'Macrohon',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -105,7 +105,7 @@ return new class extends Migration
         $barangayMAASIN = array_map(function ($barangay) {
             return [
                 'Barangay' => $barangay,
-                'Municipality_ID' => '7',
+                'TO_Municipality' => 'Maasin',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

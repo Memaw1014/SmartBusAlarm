@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Destination extends Model
+class barangays extends Model
 {
     use HasFactory;
 
-    protected $table = "destinations";
+    protected $table = "all_barangay";
 
-   
+    /**
+     * The attributes that are mass assignable.
+     */
     protected $fillable = [
-        'FROM_Municipality',
-        'TO_Municipality',
-        'Barangay',
-        'selected_seat'
-
+        'Barangay','TO_Municipality'
     ];
 }
