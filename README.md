@@ -14,7 +14,7 @@ Link : https://www.apachefriends.org/download.html
 **Note** : If you have trouble, try re-installing your programs.
 
 
-# Getting Started
+# Setting Up
 1. Run this line into your CLI to install the vendor dependencies
 ```
 composer install
