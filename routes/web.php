@@ -31,9 +31,15 @@ Route::get('/logout', [AuthManager::class, 'logout'])->name('logout');
 // Selection Routes
 Route::get('/selection', function () {
     return view('selection');
-});
+})->name('selection');
 Route::post('/selection', [DestinationController::class, 'selectionPost'])->name('selection.post');
 
+// Instruction Routes
+Route::get('/instructions', function () {
+    return view('instructions');
+})->name('instructions');
+
+// Destination Routes
 Route::get('/destination', [DestinationController::class, 'index'])->name('show.destination');
 Route::get('/map', [DestinationController::class, 'map'])->name('map');
 Route::get('/destination', [DestinationController::class, 'destination'])->name('destination.show');

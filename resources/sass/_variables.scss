@@ -1,7 +1,12 @@
 // Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
+$font-family: 'Lato', sans-serif;
+$font-family-sans-serif: $font-family;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
+
+* {
+    font-family: $font-family;
+}
 
 $white: #ffffff;
 
