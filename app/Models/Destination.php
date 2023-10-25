@@ -5,19 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TableForm extends Model
+class Destination extends Model
 {
     use HasFactory;
-    protected $table = 'TableForm';
 
+    protected $table = "destinations";
+
+   
     protected $fillable = [
         'selected_seat',
         'FROM_Municipality',
         'TO_Municipality',
         'Barangay',
-        'created_at',
-        'updated_at'
-        
-    ];
+        'Landmark',
+        'latitude',
+        'longitude'
 
+    ];
 }

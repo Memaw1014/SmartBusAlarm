@@ -20,5 +20,8 @@ class landmarks extends Model
         'TO_Municipality',
         'Barangay',
         'Landmark',
+        'latitude',
+        'longitude',
+        'icon'
     ];
 }

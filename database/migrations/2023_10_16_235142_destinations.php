@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('TO_Municipality');
             $table->string('Barangay');
             $table->string('Landmark');
+            $table->decimal('latitude', 10, 7);
+            $table->decimal('longitude', 10, 7);
             $table->timestamps();
         });
     }
