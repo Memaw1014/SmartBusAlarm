@@ -15,8 +15,12 @@ class TableForm extends Model
         'FROM_Municipality',
         'TO_Municipality',
         'Barangay',
+        'Landmark',
+        'latitude',
+        'longitude',
         'created_at',
         'updated_at'
+        
     ];
 
 }

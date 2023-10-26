@@ -17,14 +17,23 @@
         th {
             background-color: #f2f2f2;
         }
-    </style>
+    </style> 
 </head>
 <body>
-    <h1>Data Table</h1>
+    <div style="text-align: center;">
+        <h1>Data Table</h1>
+    </div>
     <div style="text-align: right;">
         <button onclick="location.href = '/login';">Admin</button>
-        <button onclick="location.href = '/map';">Go to Map</button>
+        <button id="goBackButton">Go to Map</button>
     </div>
+    <script>
+        // Add an event listener to the "Go to Map" button
+        document.getElementById("goBackButton").addEventListener("click", function () {
+            // Go back to the previous page
+            window.history.back();
+        });
+    </script>
     <table>
         <thead>
             <tr>
@@ -32,6 +41,9 @@
                 <th>From Municipality</th>
                 <th>To Municipality</th>
                 <th>To Barangay</th>
+                <th>Landmark</th>
+                <th>latitude</th>
+                <th>longitude</th>
                 <th>Created</th>
                 <th>Updated</th>
                 
@@ -44,11 +56,19 @@
                     <td>{{ $data->FROM_Municipality }}</td>
                     <td>{{ $data->TO_Municipality }}</td>
                     <td>{{ $data->Barangay }}</td>
+                    <td>{{ $data->Landmark }}</td>
+                    <td>{{ $data->latitude }}</td>
+                    <td>{{ $data->longitude }}</td>
                     <td>{{ $data->created_at }}</td>
                     <td>{{ $data->updated_at }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    <script>
+        @if(isset($selectedLandmark))
+        var selectedLandmark = @json($selectedLandmark);
+        @endif
+    </script>
 </body>
 </html>

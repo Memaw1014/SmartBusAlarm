@@ -68,6 +68,14 @@
                         </select>
                     </div>
                 </div>
+                <div style="width: 300px;">
+                                    <label class="form-label">Latitude</label>
+                                    <input type="text" class="form-control" name="latitude" id="latitude" readonly>
+                                </div>
+                                <div style="width: 300px;">
+                                    <label class="form-label">Longitude</label>
+                                    <input type="text" class="form-control" name="longitude" id="longitude" readonly>
+                                </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -117,143 +125,114 @@
             </div>
         </div>
     </div>
-
     <script>
-        function updateBarangayOptions() {
-            var selectedMunicipalityId = document.getElementById('toMunicipalitySelect').value;
-            var barangaySelect = document.getElementById('barangaySelect');
-            while (barangaySelect.options.length > 0) {
-                barangaySelect.remove(0);
-            }
-            var defaultOption = document.createElement('option');
-            defaultOption.text = 'Select Barangay';
-            defaultOption.value = '';
-            barangaySelect.add(defaultOption);
-            @foreach ($barangays as $barangay)
-                @if ($barangay->TO_Municipality === 'Sogod')
-                    if ("{{ $barangay->TO_Municipality }}" === selectedMunicipalityId) {
-                        var option = document.createElement('option');
-                        option.text = "{{ $barangay->Barangay }}";
-                        option.value = "{{ $barangay->Barangay }}";
-                        barangaySelect.add(option);
+                    function updateBarangayOptions() {
+                        var selectedMunicipalityId = document.getElementById('toMunicipalitySelect').value;
+                        var barangaySelect = document.getElementById('barangaySelect');
+                        while (barangaySelect.options.length > 0) {
+                            barangaySelect.remove(0);
+                        }
+                        var defaultOption = document.createElement('option');
+                        defaultOption.text = 'Select Barangay';
+                        defaultOption.value = '';
+                        barangaySelect.add(defaultOption);
+
+                        // Populate barangays based on selected municipality
+                        @foreach ($barangays as $barangay)
+                            if ("{{ $barangay->TO_Municipality }}" === selectedMunicipalityId) {
+                                var option = document.createElement('option');
+                                option.text = "{{ $barangay->Barangay }}";
+                                option.value = "{{ $barangay->Barangay }}";
+                                barangaySelect.add(option);
+                            }
+                        @endforeach
                     }
-                @endif
-                @if ($barangay->TO_Municipality === 'Bontoc')
-                    if ("{{ $barangay->TO_Municipality }}" === selectedMunicipalityId) {
-                        var option = document.createElement('option');
-                        option.text = "{{ $barangay->Barangay }}";
-                        option.value = "{{ $barangay->Barangay }}";
-                        barangaySelect.add(option);
+                    updateBarangayOptions();
+                    // Call the function initially and when TO: MUNICIPALITY changes
+                    document.getElementById('toMunicipalitySelect').addEventListener('change', updateBarangayOptions);
+                </script>
+                <script>
+                    function updateLandmarkOptions() {
+                        var selectedMunicipalityId = document.getElementById('toMunicipalitySelect').value;
+                        var selectedBarangay = document.getElementById('barangaySelect').value;
+                        
+                        var landmarkSelect = document.getElementById('landmarkSelect');
+                        var latitudeInput = document.getElementById('latitude');
+                        var longitudeInput = document.getElementById('longitude');
+                        
+                        while (landmarkSelect.options.length > 0) {
+                            landmarkSelect.remove(0);
+                        }
+                        
+                        var defaultOption = document.createElement('option');
+                        defaultOption.text = 'Select Landmark';
+                        defaultOption.value = '';
+                        landmarkSelect.add(defaultOption);
+                        
+                        // Populate landmarks and retrieve latitude and longitude
+                        @foreach ($landmarks as $landmark)
+                            if ("{{ $landmark->TO_Municipality }}" === selectedMunicipalityId && "{{ $landmark->Barangay }}" === selectedBarangay) {
+                                var option = document.createElement('option');
+                                option.text = "{{ $landmark->Landmark }}";
+                                option.value = "{{ $landmark->Landmark }}";
+                                landmarkSelect.add(option);
+                                latitudeInput.value = "{{ $landmark->latitude }}";
+                                longitudeInput.value = "{{ $landmark->longitude }}";
+                            }
+                        @endforeach
                     }
-                @endif
-                @if ($barangay->TO_Municipality === 'Tomas Oppus')
-                    if ("{{ $barangay->TO_Municipality }}" === selectedMunicipalityId) {
-                        var option = document.createElement('option');
-                        option.text = "{{ $barangay->Barangay }}";
-                        option.value = "{{ $barangay->Barangay }}";
-                        barangaySelect.add(option);
-                    }
-                @endif
-                @if ($barangay->TO_Municipality === 'Malitbog')
-                    if ("{{ $barangay->TO_Municipality }}" === selectedMunicipalityId) {
-                        var option = document.createElement('option');
-                        option.text = "{{ $barangay->Barangay }}";
-                        option.value = "{{ $barangay->Barangay }}";
-                        barangaySelect.add(option);
-                    }
-                @endif
-                @if ($barangay->TO_Municipality === 'Padre Burgos')
-                    if ("{{ $barangay->TO_Municipality }}" === selectedMunicipalityId) {
-                        var option = document.createElement('option');
-                        option.text = "{{ $barangay->Barangay }}";
-                        option.value = "{{ $barangay->Barangay }}";
-                        barangaySelect.add(option);
-                    }
-                @endif
-                @if ($barangay->TO_Municipality === 'Macrohon')
-                    if ("{{ $barangay->TO_Municipality }}" === selectedMunicipalityId) {
-                        var option = document.createElement('option');
-                        option.text = "{{ $barangay->Barangay }}";
-                        option.value = "{{ $barangay->Barangay }}";
-                        barangaySelect.add(option);
-                    }
-                @endif
-                @if ($barangay->TO_Municipality === 'Maasin')
-                    if ("{{ $barangay->TO_Municipality }}" === selectedMunicipalityId) {
-                        var option = document.createElement('option');
-                        option.text = "{{ $barangay->Barangay }}";
-                        option.value = "{{ $barangay->Barangay }}";
-                        barangaySelect.add(option);
-                    }
-                @endif
-            @endforeach
-        }
-        updateBarangayOptions();
-    </script>
+                    // Call the function initially and when TO: MUNICIPALITY or TO: BARANGAY changes
+                    document.getElementById('toMunicipalitySelect').addEventListener('change', updateLandmarkOptions);
+                    document.getElementById('barangaySelect').addEventListener('change', updateLandmarkOptions);
+                    document.getElementById('landmarkSelect').addEventListener('change', function() {
+                        var selectedLandmark = document.getElementById('landmarkSelect').value;
+                        var landmarkData = @json($landmarks);
+                        // Find the selected landmark data and update the latitude and longitude fields
+                        for (var i = 0; i < landmarkData.length; i++) {
+                            if (landmarkData[i].Landmark === selectedLandmark) {
+                                document.getElementById('latitude').value = landmarkData[i].latitude;
+                                document.getElementById('longitude').value = landmarkData[i].longitude;
+                                break;
+                            }
+                        }
+                    });
+                    updateLandmarkOptions();
+                </script>
 
-    <script>
-        function updateLandmarkOptions() {
-            var selectedMunicipalityId = document.getElementById('toMunicipalitySelect').value;
-            var selectedBarangay = document.getElementById('barangaySelect').value;
-            var landmarkSelect = document.getElementById('landmarkSelect');
+                <script>
+                        var expectedPasscode = "123";
 
-            while (landmarkSelect.options.length > 0) {
-                landmarkSelect.remove(0);
-            }
+                        document.addEventListener('DOMContentLoaded', function () {
+                            document.querySelector('form').addEventListener('submit', function (e) {
+                                e.preventDefault();
 
-            var defaultOption = document.createElement('option');
-            defaultOption.text = 'Select Landmark';
-            defaultOption.value = '';
-            landmarkSelect.add(defaultOption);
+                                var municipality1 = document.querySelector('select[name="FROM_Municipality"]').value;
+                                var municipality2 = document.querySelector('select[name="TO_Municipality"]').value;
+                                var barangay = document.querySelector('select[name="Barangay"]').value;
 
-            @foreach ($landmarks as $landmark)
-                if ("{{ $landmark->TO_Municipality }}" === selectedMunicipalityId && "{{ $landmark->Barangay }}" === selectedBarangay) {
-                    var option = document.createElement('option');
-                    option.text = "{{ $landmark->Landmark }}";
-                    option.value = "{{ $landmark->Landmark }}";
-                    landmarkSelect.add(option);
-                }
-            @endforeach
-        }
+                                // Set the values in the modal
+                                document.getElementById('modalMunicipality1').textContent = municipality1;
+                                document.getElementById('modalMunicipality2').textContent = municipality2;
+                                document.getElementById('modalBarangay').textContent = barangay;
 
-        // Call the function initially and when Barangay changes
-        updateLandmarkOptions();
-        document.getElementById('toMunicipalitySelect').addEventListener('change', updateLandmarkOptions);
-        document.getElementById('barangaySelect').addEventListener('change', updateLandmarkOptions);
-    </script>
+                                // Show the modal
+                                $('#passcodeModal').modal('show');
+                            });
 
-    <script>
-        var expectedPasscode = "123";
+                            document.getElementById('submitPasscode').addEventListener('click', function () {
+                                var passcodeInput = document.getElementById('passcodeInput').value;
 
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelector('form').addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                var municipality1 = document.querySelector('select[name="FROM_Municipality"]').value;
-                var municipality2 = document.querySelector('select[name="TO_Municipality"]').value;
-                var barangay = document.querySelector('select[name="Barangay"]').value;
-
-                // Set the values in the modal
-                document.getElementById('modalMunicipality1').textContent = municipality1;
-                document.getElementById('modalMunicipality2').textContent = municipality2;
-                document.getElementById('modalBarangay').textContent = barangay;
-
-                // Show the modal
-                $('#passcodeModal').modal('show');
-            });
-
-            document.getElementById('submitPasscode').addEventListener('click', function () {
-                var passcodeInput = document.getElementById('passcodeInput').value;
-
-                if (passcodeInput === expectedPasscode) {
-                    $('#passcodeModal').modal('hide');
-                    document.querySelector('form').submit();
-                } else {
-                    alert("Incorrect passcode. Submission canceled.");
-                }
-            });
-        });
-    </script>
-
+                                if (passcodeInput === expectedPasscode) {
+                                    $('#passcodeModal').modal('hide');
+                                    document.querySelector('form').submit();
+                                } else {
+                                    alert("Incorrect passcode. Submission canceled.");
+                                }
+                            });
+                        });
+                    </script>
+            </div>
+        </div>
+    </div>
 
 @endsection

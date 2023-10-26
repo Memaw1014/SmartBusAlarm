@@ -42,11 +42,12 @@
         <button id="backButton">Back</button>
         <button id="historyButton">History</button>
     </div>
-    <div id="map" style="height: 80vh;"></div>
+    <div id="map" style="width: 100%; height: 500px;"></div>
     
     
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.js"></script>
+
 
     <script>
         // Your custom JavaScript code here
@@ -56,32 +57,19 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        var customMarkerIcon = L.icon({
-            iconUrl: 'map-app/img',
-            iconSize: [25, 25]
-        });
-
-        function getUserLocation() {
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var userLat = position.coords.latitude;
-                    var userLng = position.coords.longitude;
-
-                    map.setView([userLat, userLng], 17); 
-
-                    var userMarker = L.marker([userLat, userLng]).addTo(map);
-                    userMarker.bindPopup("Your Location").openPopup();
-                    
-                }, function (error) {
-                    console.error("Error getting user location:", error);
-                    alert("Unable to retrieve your location.");
-                });
-            } else {
-                alert("Geolocation is not supported by your browser.");
-            }
+        function addMarker(latitude, longitude, title) {
+            var marker = L.marker([latitude, longitude]).addTo(map);
+            marker.bindPopup(title).openPopup();
         }
 
+        // Add the selected landmark as a marker
+        var selectedLandmark = @json($selectedLandmark);
+        addMarker(selectedLandmark.latitude, selectedLandmark.longitude, selectedLandmark.Landmark);
+
         // Create a route
+        // Create a route
+        
+
         function createRoute(routeName, startCoords, endCoords) {
             var start = L.latLng(startCoords[0], startCoords[1]);
             var end = L.latLng(endCoords[0], endCoords[1]);
@@ -93,23 +81,39 @@
                 ],
                 routeWhileDragging: true,
                 lineOptions: {
-                    styles: [{ color: 'red', opacity: 0.7, weight: 7 }]
+                    styles: [{ color: 'red', opacity: 0.7, weight: 7, interactive: false }]
                 },
-                show: true // Set this option to hide route instructions
+                show: false, // Set this option to hide route instructions
+                fitSelectedRoutes: false // Disable automatic zoom adjustment
             }).addTo(map);
-
-    
-
-            route.on('routesfound', function (e) {
-                var routes = e.routes;
-                console.log(routeName + " route:", routes);
-
-                // Call the callback function if provided
-                if (callback && typeof callback === 'function') {
-                    callback();
-                }
-            });
         }
+
+
+        function getUserLocation() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        var userLat = position.coords.latitude;
+                        var userLng = position.coords.longitude;
+                        var userLocation = L.latLng(userLat, userLng);
+
+                        // Add a marker for the user's current location
+                        var userMarker = L.marker(userLocation).addTo(map);
+                        userMarker.bindPopup("Your Location").openPopup();
+
+                        // Update the map's view to the user's location
+                        map.setView(userLocation, 15); // You can adjust the zoom level (15 in this case) as needed.
+                    },
+                    function (error) {
+                        console.error("Error getting location:", error);
+                    }
+                );
+            } else {
+                alert("Geolocation is not available in your browser.");
+            }
+        }
+
+
 
         // Create routes to Sogod and Maasin
         function createRoutes() {
@@ -120,14 +124,12 @@
             createRoute("Padre Burgos", [10.102049, 125.008913], [10.031811634190236, 125.0097724038416]);
             createRoute("Maacrohon", [10.031811634190236, 125.0097724038416], [10.116513620264532, 124.89404637267265]);
             createRoute("Maasin", [10.116513620264532, 124.89404637267265], [10.132195394128429, 124.83481102052342], function() {
-        
-                getUserLocation();
+            getUserLocation();
             });
         }
+        createRoutes();
 
         // Call the createRoutes() function to create routes
-      
-
         document.addEventListener("DOMContentLoaded", getUserLocation);
         // Add event listener to the "GET LOCATION" button
         document.getElementById("currentLocationButton").addEventListener("click", function () {
@@ -144,9 +146,56 @@
             window.location.href = "http://127.0.0.1:8000/table";
         });
 
-        createRoutes();
+        // Add an event listener to the map to stop click event propagation
+        document.getElementById("map").addEventListener("click", function (e) {
+            e.stopPropagation();
+        });
+
+        document.getElementById("currentLocationButton").addEventListener("click", function () {
+            map.dragging.disable();
+            map.touchZoom.disable();
+            map.doubleClickZoom.disable();
+            map.scrollWheelZoom.disable();
+            map.boxZoom.disable();
+            // Your getUserLocation() code here
+          
+        });
+
 
     </script>
+
+    <!-- MapQuest API script -->
+        <script>
+            // Include the MapQuest JavaScript API script
+            // Make sure to replace 'YOUR_API_KEY' with your actual MapQuest API key
+            const apiKey = 'kk7XjYNjvXIAGxlKuGN6lIeWPU9XCVBG';
+            const script = document.createElement('script');
+            script.src = https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js?key=${apiKey};
+            script.async = true;
+            script.defer = true;
+            script.onload = initializeMap;
+            document.head.appendChild(script);
+
+            function initializeMap() {
+                L.mapquest.key = apiKey;
+
+                // Do not create a map here; the Leaflet map is already created
+
+                // Add a marker for the selected landmark using the MapQuest API
+                var selectedLandmark = @json($selectedLandmark);
+                var map = L.mapquest.map('map');
+                L.mapquest.textMarker([selectedLandmark.latitude, selectedLandmark.longitude], {
+                    text: selectedLandmark.Landmark,
+                    position: 'right',
+                    type: 'marker',
+                    icon: {
+                        primaryColor: '#3333FF',
+                        secondaryColor: '#3333FF',
+                        size: 'sm'
+                    }
+                }).addTo(map);
+            }
+        </script>
+
 </body>
 </html>
-

@@ -19,9 +19,9 @@ class DestinationController extends Controller
         $to_municipalities = to_municipalities::all();
         $barangays = barangays::all();
         $landmarks = landmarks::all();
+        
         return view('destination', compact('selectedSeat', 'from_municipalities', 'to_municipalities', 'barangays', 'landmarks'));
     }
-
 
     public function destinationPost(Request $request)
     {
@@ -29,103 +29,48 @@ class DestinationController extends Controller
             'selected_seat' => 'required',
             'FROM_Municipality' => 'required',
             'TO_Municipality' => 'required',
-            'Barangay' => 'required'
+            'Barangay' => 'required',
+            'Landmark' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required'
         ]);
         TableForm::create($validatedData);
         
-        // Redirect to the table view
-        return redirect()->route('map')->with('form_data', $validatedData);
-
-        $data['selected_seat'] = $request->selected_seat;
-        $data['FROM_Municipality'] = $request->FROM_Municipality;
-        $data['TO_Municipality'] = $request->TO_Municipality;
-        $data['Barangay'] = $request->Barangay;
-        $data['landmarks'] = $request->landmarks;
-
-
-        $destination = Destination::create($data);
-
-        if (!$destination) {
-            return redirect(route('destination'))->with("error", "Registration failed, try again.");
-        }
-        $message1 = "\nPLEASE WAIT FOR THE CONDUCTOR ";
-        $message2 = "\nselected_seat: " . $data['selected_seat'];
-        $message3 = "FROM_Municipality: " . $data['FROM_Municipality']; 
-        $message4 = "\nTO_Municipality: " . $data['TO_Municipality']; 
-        $message5 = "\nBarangay: " . $data['Barangay'];
+        $selectedLandmark = $request->input('Landmark');
+        $landmark = landmarks::where('Landmark', $selectedLandmark)->first();
         
 
-        return view('map', compact('message1','message2', 'message3', 'message4', 'message' ));
-    }
+        return view('map', [
+            'selectedLandmark' => $landmark,
+        ]);
+        }
 
-    public function map()
-    {
-        $googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
-
-        return view('map', ['googleMapsApiKey' => $googleMapsApiKey]);
-    }
-
+        public function map(Request $request)
+        {
+            $selectedLandmarkId = $request->input('Landmark'); // Assuming 'Landmark' is the input field name
+            // Retrieve the landmark data based on the saved information, for example:
+            $selectedLandmark = Landmarks::where('Landmark', $selectedLandmarkId)->first();
+            
+            return view('map', ['selectedLandmark' => $selectedLandmark]);
+        }
     public function selectionPost(Request $request)
     {
-        // Get the selected seat value from the form
         $selected_seat = $request->input('selected_seat');
-
-        // Define variables to store messages and redirection URLs
         $message = '';
         $redirectTo = '';
 
-        // Perform logic based on the selected seat
-        switch ($selected_seat) {
-            case 'SEAT 1':
-                // Handle logic for Seat No. 1
-                $message = 'You have selected Seat No. 1.';
-                $redirectTo = '/destination'; // Example redirection URL
-                break;
-
-            case 'SEAT 2':
-                // Handle logic for Seat No. 2
-                $message = 'You have selected Seat No. 2.';
-                $redirectTo = '/destination'; // Example redirection URL
-                break;
-
-            // Add more cases for other seat options if needed
-
-            default:
-                // Handle the default case if the selected seat is not recognized
-                $message = 'Invalid seat selection.';
-                $redirectTo = '/selection'; // Redirect back to the selection page
-                break;
-        }
-
+        
         // Redirect back or return a response
-        return redirect()->route('show-destination', ['selected_seat' => $selected_seat])->with('message', $message);
+        return redirect()->route('destination.show', ['selected_seat' => $selected_seat])->with('message', $message);
     }
 
-    public function submitDestination(Request $request)
-    {
-        
-    }
-    
-    public function showMap()
-    {
-        // Fetch destination data from your database, e.g., using Eloquent
-        $destinations = Destination::all();
-
-        
-        return view('map', compact('destinations'));
-    }
-    
-    public function createForm()
-    {
-        return view('selection');
-    }
-
-
-    public function displayTable()
+    public function displayTable(Request $request)
     {
         $tableFormData = TableForm::all();
-        return view('table', ['form_data' => $tableFormData]);
-    }
+        $selectedLandmarkId = $request->input('selectedLandmarkId');
+        $selectedLandmark = Landmarks::find($selectedLandmarkId);
 
-    
+        // Redirect back to the previous page with a flash message
+        return view('table', ['form_data' => $tableFormData, 'selectedLandmark' => $selectedLandmark]);
+}
 }
