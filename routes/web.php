@@ -20,4 +20,3 @@ Route::post('/destination/{selected_seat}', [DestinationController::class, 'dest
 Route::match(['get', 'post'], '/selection', [DestinationController::class, 'selectionPost'])->name('selection.post');
 Route::get('/map', [DestinationController::class, 'map'])->name('map');
 Route::get('/table', [DestinationController::class, 'displayTable'])->name('show-table');
-Route::post('/show-map', [DestinationController::class, 'map'])->name('map');
