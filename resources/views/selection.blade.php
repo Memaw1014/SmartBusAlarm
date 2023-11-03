@@ -6,6 +6,13 @@
             <h1 class=" fw-bold text-primary">
                 SELECTION
             </h1>
+
+            <!-- DIA RA BAY -->
+            <audio id="audioPlayer" src="assets/sfx/arrive.wav" autoplay></audio>
+            <div>
+                <button id="playButton" class="btn btn-primary fw-bolder p-3">Play Audio</button>
+                <button id="stopButton" class="btn btn-danger fw-bolder p-3">Stop Audio</button>
+            </div>
         </div>
 
         <div class="card-body d-flex flex-column gap-3 align-items-center mt-5 mb-5 ">
@@ -43,6 +50,21 @@
         // Get references to the buttons
         var seat1Button = document.getElementById("seat1Button");
         var seat2Button = document.getElementById("seat2Button");
+
+        var playButton = document.getElementById("playButton");
+        var stopButton = document.getElementById("stopButton");
+        var audioPlayer = document.getElementById("audioPlayer");
+
+        // Add a click event handler to the play button
+        playButton.addEventListener("click", function() {
+            audioPlayer.play();
+        });
+
+        // Add a click event handler to the stop button
+        stopButton.addEventListener("click", function() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0; // Reset the audio to the beginning
+        });
 
         // Disable buttons if Local Storage values are not empty
         if (seat1Value && seat1Value.trim() !== "") {
