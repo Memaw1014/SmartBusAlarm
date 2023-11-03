@@ -48,7 +48,19 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.js"></script>
 
+    <script>
+    // Check Local Storage for values of SEAT NO. 1 and SEAT NO. 2
+    var seat1Value = localStorage.getItem("SEAT NO. 1");
+    var seat2Value = localStorage.getItem("SEAT NO. 2");
 
+    // Get references to the buttons
+    var backdisable = document.getElementById("backButton"); // Change "backButton" to the correct ID of SEAT NO. 1 button
+    // Disable buttons if Local Storage values are not empty
+        if (seat1Value && seat1Value.trim() !== "" && seat2Value && seat2Value.trim() !== "") {
+            backdisable.disabled = true;
+        }
+
+</script>
     <script>
         // Your custom JavaScript code here
         var map = L.map('map').setView([10.3346, 125.1709], 10); // Centered on Southern Leyte, adjusted zoom level
@@ -64,7 +76,19 @@
 
         // Add the selected landmark as a marker
         var selectedLandmark = @json($selectedLandmark);
-        addMarker(selectedLandmark.latitude, selectedLandmark.longitude, selectedLandmark.Landmark);
+        //addMarker(selectedLandmark.latitude, selectedLandmark.longitude, selectedLandmark.Landmark);
+
+        var key1 = "SEAT NO. 1";
+        if (localStorage.getItem(key1) !== null && localStorage.getItem(key1) !== ""){
+            var coordinates = localStorage.getItem("SEAT NO. 1").split(',');
+            addMarker(coordinates[1], coordinates[0], coordinates[2]);
+        }
+
+        var key2 = "SEAT NO. 2";
+        if (localStorage.getItem(key2) !== null && localStorage.getItem(key2) !== ""){
+            var coordinates = localStorage.getItem("SEAT NO. 2").split(',');
+            addMarker(coordinates[1], coordinates[0], coordinates[2]);
+        }
 
         // Create a route
         // Create a route
@@ -81,7 +105,7 @@
                 ],
                 routeWhileDragging: true,
                 lineOptions: {
-                    styles: [{ color: 'red', opacity: 0.7, weight: 7, interactive: false }]
+                    styles: [{ color: 'red', opacity: 0.7, weight: 5, interactive: false }]
                 },
                 show: false, // Set this option to hide route instructions
                 fitSelectedRoutes: false // Disable automatic zoom adjustment
@@ -142,8 +166,16 @@
             window.location.href = "http://127.0.0.1:8000";
         });
         document.getElementById("historyButton").addEventListener("click", function () {
+        // Prompt the user for a password
+        var password = prompt("Please enter the password:");
+
+        // Check if the entered password is correct
+        if (password === "123") {
             // Redirect to the history.blade.php URL
             window.location.href = "http://127.0.0.1:8000/table";
+        } else {
+            alert("Incorrect password. Access denied.");
+        }
         });
 
         // Add an event listener to the map to stop click event propagation

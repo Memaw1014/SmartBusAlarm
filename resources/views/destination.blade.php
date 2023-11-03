@@ -16,7 +16,7 @@
                     <label class="h5 fw-bold form-label text-primary ">
                         SEAT
                     </label>
-                    <input type="text" class="form-control w-50" name="selected_seat" value="{{ $selectedSeat }}">
+                    <input type="text" class="form-control w-50" name="selected_seat" value="{{ $selectedSeat }}"readonly>
                 </div>
                 @csrf
                 <div class="h5 fw-bold form-label text-primary " >
@@ -30,7 +30,7 @@
                                 <option value="{{ $municipality1->FROM_Municipality }}">{{ $municipality1->FROM_Municipality }}</option>
                             @endforeach
                         </select>
-                        <input type="hidden" name="current_location" id="currentLocation">
+                        
                     </div>
                 </div>
                 <div class="h5 fw-bold form-label text-primary ">
@@ -44,15 +44,45 @@
                                 <option value="{{ $municipality2->TO_Municipality }}">{{ $municipality2->TO_Municipality }}</option>
                             @endforeach
                         </select>
+                        
                     </div>
                 </div>
+                <script>
+                    function calculateValue() {
+                        // Get the selected values from the dropdowns
+                        var dropdown1 = document.getElementById("municipalitySelect").value;
+                        var dropdown2 = document.getElementById("toMunicipalitySelect").value;
+
+                        // Define the conditions and corresponding values
+                        var conditions = {
+                            "SogodSogod": 5,
+                            "SogodBontoc": 10,
+                            "SogodTomas Oppus": 15,
+                            "SogodMalitbog": 20,
+                            "SogodPadre Burgos": 25,
+                            "SogodMacrohon": 30,
+                            "SogodMaasin": 35,
+                        };
+
+                        // Combine the selected values to form the condition (e.g., "AA", "AB", etc.)
+                        var condition = dropdown1 + dropdown2;
+
+                        // Check if the condition exists in the conditions object
+                        if (conditions.hasOwnProperty(condition)) {
+                            var result = conditions[condition];
+                            document.getElementById("result").textContent = "Result: " + result;
+                        } else {
+                            document.getElementById("result").textContent = "Result: Not found";
+                        }
+                    }
+                </script>
                 <div class="h5 fw-bold form-label text-primary " >
                     <div class="d-flex flex-row gap-3 align-items-center justify-content-between">
                         <label class="form-label">
                             TO : BARANGAY
                         </label>
                         <!--<hr class="separator border border-2 border-primary w-100">-->
-                        <select class="form-control w-50" name="Barangay" id="barangaySelect">
+                        <select class="form-control w-50" name="Barangay" id="barangaySelect"required>
                             <!-- This select will be populated dynamically using JavaScript -->
                         </select>
                     </div>
@@ -63,8 +93,23 @@
                             DESIRED GET OFF
                         </label>
                         <!--<hr class="separator border border-2 border-primary w-100">-->
-                        <select class="form-control w-50" name="Landmark" id="landmarkSelect">
+                        <select class="form-control w-50" name="Landmark" id="landmarkSelect"required>
                             <!-- This select will be populated dynamically using JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                <div class="h5 fw-bold form-label text-primary">
+                    <div class="d-flex flex-row gap-3 align-items-center justify-content-between">
+                        <label class="form-label">
+                            PASSENGER TYPE
+                        </label>
+                        <!--<hr class="separator border border-2 border-primary w-100">-->
+                        <select class="form-control w-50" name="PassengerType" id="passengerTypeSelect"required>
+                            <option value="">Select Type</option>
+                            <option value=".2">PWD</option>
+                            <option value=".2">STUDENT</option>
+                            <option value=".2">SENIOR</option>
+                            <option value="1">REGULAR</option>
                         </select>
                     </div>
                 </div>
@@ -104,9 +149,12 @@
                             <span id="modalBarangay" class="form-control"></span>
                         </div>
                         <div class="form-group">
-                            <label for="passcodeInput">Passcode:</label>
+                            <label for="passcodeInput">Please wait shortly as the Conductor wil Scan your Selection</label>
                             <input type="password" class="form-control" id="passcodeInput">
                         </div>
+
+                        <div id="modalMessage"></div>
+                        <div id ="modalResult"></div>
                     </div>
 
                     <div class="modal-footer d-flex flex-column gap-1 ">
@@ -213,6 +261,38 @@
                 document.getElementById('modalMunicipality2').textContent = municipality2;
                 document.getElementById('modalBarangay').textContent = barangay;
 
+                var message = "Please Provide the Necessary Documents for Validation";
+                document.getElementById('modalMessage').textContent = message;
+                modalMessage.textContent = message;
+                modalMessage.style.fontWeight = "bold";
+                modalMessage.style.color = "green";
+
+                var from_muncipality = document.getElementById("municipalitySelect").value;
+                var to_municipality = document.getElementById("toMunicipalitySelect").value;
+                var discount = parseFloat(document.getElementById("passengerTypeSelect").value); // Convert to a number
+
+                var conditions = {
+                            "SogodSogod": 5,
+                            "SogodBontoc": 10,
+                            "SogodTomas Oppus": 15,
+                            "SogodMalitbog": 20,
+                            "SogodPadre Burgos": 25,
+                            "SogodMacrohon": 30,
+                            "SogodMaasin": 35,
+                        };
+
+                var condition = from_muncipality + to_municipality; // Combine the selected values to form the condition (e.g., "AA", "AB", etc.)
+                var payment = "Your Payment is:  P" + result + ".00";
+                // Check if the condition exists in the conditions object
+                if (conditions.hasOwnProperty(condition)) {
+                    var result = conditions[condition]* discount;
+                    var payment = "Your Payment is: P" + result + ".00";
+                    modalResult.textContent = payment;
+                    modalResult.style.fontWeight = "bold";
+                    modalMessage.style.color = "red";
+                }else {
+                    document.getElementById("modalResult").textContent = "Result: Not found";
+                    }
                 // Show the modal
                 $('#passcodeModal').modal('show');
             });
@@ -242,6 +322,12 @@
 
                     // Submit the form
                     $('#passcodeModal').modal('hide');
+                    
+                    var selectedSeat = document.querySelector('input[name="selected_seat"]').value;
+                    var coordinates = localStorage.getItem("longitude") + "," + localStorage.getItem("latitude") + "," + document.getElementById('landmarkSelect').value;
+                    
+                    localStorage.setItem(selectedSeat, coordinates);
+                    
                     form.submit();
                 } else {
                     alert("Incorrect passcode. Submission canceled.");
