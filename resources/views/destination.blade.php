@@ -30,7 +30,7 @@
                                 <option value="{{ $municipality1->FROM_Municipality }}">{{ $municipality1->FROM_Municipality }}</option>
                             @endforeach
                         </select>
-                        
+
                     </div>
                 </div>
                 <div class="h5 fw-bold form-label text-primary ">
@@ -44,7 +44,7 @@
                                 <option value="{{ $municipality2->TO_Municipality }}">{{ $municipality2->TO_Municipality }}</option>
                             @endforeach
                         </select>
-                        
+
                     </div>
                 </div>
                 <script>
@@ -322,12 +322,12 @@
 
                     // Submit the form
                     $('#passcodeModal').modal('hide');
-                    
+
                     var selectedSeat = document.querySelector('input[name="selected_seat"]').value;
                     var coordinates = localStorage.getItem("longitude") + "," + localStorage.getItem("latitude") + "," + document.getElementById('landmarkSelect').value;
-                    
+
                     localStorage.setItem(selectedSeat, coordinates);
-                    
+
                     form.submit();
                 } else {
                     alert("Incorrect passcode. Submission canceled.");
