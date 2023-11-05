@@ -2,26 +2,29 @@
 @section('content')
     <div class="card mt-5 mb-5 p-5 shadow-sm">
         <div class="card-header bg-white d-flex flex-column gap-3 align-items-center">
-            <h1 class=" fw-bold text-primary">
+            <h1 class="fw-bold text-primary">
                 WELCOME
             </h1>
         </div>
 
         <div class="card-body d-flex flex-column gap-3 align-items-center mt-5 mb-5 ">
-            <h4 class=" fw-bold text-primary mb-5">
+            <h4 class="fw-bold text-primary mb-5">
                 Let's get Started!
             </h4>
             <form class="d-flex flex-column gap-3 w-100" method="POST" action="{{ route('check.rfid') }}">
                 @csrf
-                <input type="text" name="rfid_password" placeholder="Enter RFID Password" id = "rfid_password" >
-                <button  id = "startButton" type="submit" class="btn btn-primary border-3 fw-bold">
+                <input type="text" name="rfid_password" placeholder="Enter RFID Password" id="rfid_password">
+                <button id="startButton" type="submit" class="btn btn-primary border-3 fw-bold">
                     Start Now
                 </button>
             </form>
+
+            <!-- Add the admin button to redirect to the admin login page -->
+            <a href="http://127.0.0.1:8000/login" class="btn btn-secondary mt-3">Admin</a>
         </div>
 
         <div class="card-footer bg-white">
-            <div class=" d-flex flex-row justify-content-between mt-3 ">
+            <div class="d-flex flex-row justify-content-between mt-3">
                 <p>
                     Copyright 2023
                 </p>
@@ -37,6 +40,4 @@
             localStorage.setItem("passcodeUsed", rfidPassword);
         });
     </script>
-
-    
 @endsection
