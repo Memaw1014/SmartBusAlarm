@@ -16,7 +16,7 @@
                     <label class="h5 fw-bold form-label text-primary ">
                         SEAT
                     </label>
-                    <input type="text" class="form-control w-50" name="selected_seat" value="{{ $selectedSeat }}">
+                    <input type="text" class="form-control w-50" name="selected_seat" value="{{ $selectedSeat }}"readonly>
                 </div>
                 @csrf
                 <div class="h5 fw-bold form-label text-primary " >
@@ -30,7 +30,7 @@
                                 <option value="{{ $municipality1->FROM_Municipality }}">{{ $municipality1->FROM_Municipality }}</option>
                             @endforeach
                         </select>
-                        <input type="hidden" name="current_location" id="currentLocation">
+                        
                     </div>
                 </div>
                 <div class="h5 fw-bold form-label text-primary ">
@@ -44,15 +44,45 @@
                                 <option value="{{ $municipality2->TO_Municipality }}">{{ $municipality2->TO_Municipality }}</option>
                             @endforeach
                         </select>
+                        
                     </div>
                 </div>
+                <script>
+                    function calculateValue() {
+                        // Get the selected values from the dropdowns
+                        var dropdown1 = document.getElementById("municipalitySelect").value;
+                        var dropdown2 = document.getElementById("toMunicipalitySelect").value;
+
+                        // Define the conditions and corresponding values
+                        var conditions = {
+                            "SogodSogod": 5,
+                            "SogodBontoc": 10,
+                            "SogodTomas Oppus": 15,
+                            "SogodMalitbog": 20,
+                            "SogodPadre Burgos": 25,
+                            "SogodMacrohon": 30,
+                            "SogodMaasin": 35,
+                        };
+
+                        // Combine the selected values to form the condition (e.g., "AA", "AB", etc.)
+                        var condition = dropdown1 + dropdown2;
+
+                        // Check if the condition exists in the conditions object
+                        if (conditions.hasOwnProperty(condition)) {
+                            var result = conditions[condition];
+                            document.getElementById("result").textContent = "Result: " + result;
+                        } else {
+                            document.getElementById("result").textContent = "Result: Not found";
+                        }
+                    }
+                </script>
                 <div class="h5 fw-bold form-label text-primary " >
                     <div class="d-flex flex-row gap-3 align-items-center justify-content-between">
                         <label class="form-label">
                             TO : BARANGAY
                         </label>
                         <!--<hr class="separator border border-2 border-primary w-100">-->
-                        <select class="form-control w-50" name="Barangay" id="barangaySelect">
+                        <select class="form-control w-50" name="Barangay" id="barangaySelect"required>
                             <!-- This select will be populated dynamically using JavaScript -->
                         </select>
                     </div>
@@ -63,8 +93,23 @@
                             DESIRED GET OFF
                         </label>
                         <!--<hr class="separator border border-2 border-primary w-100">-->
-                        <select class="form-control w-50" name="Landmark" id="landmarkSelect">
+                        <select class="form-control w-50" name="Landmark" id="landmarkSelect"required>
                             <!-- This select will be populated dynamically using JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                <div class="h5 fw-bold form-label text-primary">
+                    <div class="d-flex flex-row gap-3 align-items-center justify-content-between">
+                        <label class="form-label">
+                            PASSENGER TYPE
+                        </label>
+                        <!--<hr class="separator border border-2 border-primary w-100">-->
+                        <select class="form-control w-50" name="PassengerType" id="passengerTypeSelect"required>
+                            <option value="">Select Type</option>
+                            <option value=".2">PWD</option>
+                            <option value=".2">STUDENT</option>
+                            <option value=".2">SENIOR</option>
+                            <option value="1">REGULAR</option>
                         </select>
                     </div>
                 </div>
@@ -104,9 +149,12 @@
                             <span id="modalBarangay" class="form-control"></span>
                         </div>
                         <div class="form-group">
-                            <label for="passcodeInput">Passcode:</label>
+                            <label for="passcodeInput">Please wait shortly as the Conductor wil Scan your Selection</label>
                             <input type="password" class="form-control" id="passcodeInput">
                         </div>
+
+                        <div id="modalMessage"></div>
+                        <div id ="modalResult"></div>
                     </div>
 
                     <div class="modal-footer d-flex flex-column gap-1 ">
@@ -156,7 +204,7 @@
             }
 
             var defaultOption = document.createElement('option');
-            defaultOption.text = 'Select Landmark';
+            defaultOption.text = 'Select Desired Get Off';
             defaultOption.value = '';
             landmarkSelect.add(defaultOption);
 
@@ -172,25 +220,25 @@
                 localStorage.setItem("latitude", "{{ $landmark->latitude }}");
             }
             @endforeach
-        }
-
-        // Call the function initially and when TO: MUNICIPALITY or TO: BARANGAY changes
-        document.getElementById('toMunicipalitySelect').addEventListener('change', updateLandmarkOptions);
-        document.getElementById('barangaySelect').addEventListener('change', updateLandmarkOptions);
-
-        document.getElementById('landmarkSelect').addEventListener('change', function () {
-            var selectedLandmark = document.getElementById('landmarkSelect').value;
-            var landmarkData = @json($landmarks);
-            // Find the selected landmark data and update the latitude and longitude fields
-            for (var i = 0; i < landmarkData.length; i++) {
-                if (landmarkData[i].Landmark === selectedLandmark) {
-                    // Update localStorage with the selected longitude and latitude
-                    localStorage.setItem("longitude", landmarkData[i].longitude);
-                    localStorage.setItem("latitude", landmarkData[i].latitude);
-                    break;
-                }
             }
-        });
+
+            // Call the function initially and when TO: MUNICIPALITY or TO: BARANGAY changes
+            document.getElementById('toMunicipalitySelect').addEventListener('change', updateLandmarkOptions);
+            document.getElementById('barangaySelect').addEventListener('change', updateLandmarkOptions);
+
+            document.getElementById('landmarkSelect').addEventListener('change', function () {
+                var selectedLandmark = document.getElementById('landmarkSelect').value;
+                var landmarkData = @json($landmarks);
+                // Find the selected landmark data and update the latitude and longitude fields
+                for (var i = 0; i < landmarkData.length; i++) {
+                    if (landmarkData[i].Landmark === selectedLandmark) {
+                        // Update localStorage with the selected longitude and latitude
+                        localStorage.setItem("longitude", landmarkData[i].longitude);
+                        localStorage.setItem("latitude", landmarkData[i].latitude);
+                        break;
+                    }
+                }
+            });
 
         // Initialize the landmark options
         updateLandmarkOptions();
@@ -198,7 +246,7 @@
 
 
     <script>
-        var expectedPasscode = "123";
+        var passcodes = ["123", "456"]; // Add the new passcode here
 
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('form').addEventListener('submit', function (e) {
@@ -213,14 +261,49 @@
                 document.getElementById('modalMunicipality2').textContent = municipality2;
                 document.getElementById('modalBarangay').textContent = barangay;
 
+                var message = "Please Provide the Necessary Documents for Validation";
+                document.getElementById('modalMessage').textContent = message;
+                modalMessage.textContent = message;
+                modalMessage.style.fontWeight = "bold";
+                modalMessage.style.color = "green";
+
+                var from_muncipality = document.getElementById("municipalitySelect").value;
+                var to_municipality = document.getElementById("toMunicipalitySelect").value;
+                var discount = parseFloat(document.getElementById("passengerTypeSelect").value); // Convert to a number
+
+                var conditions = {
+                            "SogodSogod": 5,
+                            "SogodBontoc": 10,
+                            "SogodTomas Oppus": 15,
+                            "SogodMalitbog": 20,
+                            "SogodPadre Burgos": 25,
+                            "SogodMacrohon": 30,
+                            "SogodMaasin": 35,
+                        };
+
+                var condition = from_muncipality + to_municipality; // Combine the selected values to form the condition (e.g., "AA", "AB", etc.)
+                var payment = "Your Payment is:  P" + result + ".00";
+                // Check if the condition exists in the conditions object
+                if (conditions.hasOwnProperty(condition)) {
+                    var result = conditions[condition]* discount;
+                    var payment = "Your Payment is: P" + result + ".00";
+                    modalResult.textContent = payment;
+                    modalResult.style.fontWeight = "bold";
+                    modalMessage.style.color = "red";
+                }else {
+                    document.getElementById("modalResult").textContent = "Result: Not found";
+                    }
                 // Show the modal
                 $('#passcodeModal').modal('show');
             });
 
             document.getElementById('submitPasscode').addEventListener('click', function () {
                 var passcodeInput = document.getElementById('passcodeInput').value;
-
-                if (passcodeInput === expectedPasscode) {
+                if (passcodeInput != localStorage.getItem('passcodeUsed')){
+                    alert("Incorrect Password!");
+                    return;
+                }
+                if (passcodeInput === "123" || passcodeInput === "456") {
                     // Get latitude and longitude from localStorage
                     var latitude = localStorage.getItem("latitude");
                     var longitude = localStorage.getItem("longitude");
@@ -242,11 +325,19 @@
 
                     // Submit the form
                     $('#passcodeModal').modal('hide');
+                    
+                    var selectedSeat = document.querySelector('input[name="selected_seat"]').value;
+                    var coordinates = localStorage.getItem("longitude") + "," + localStorage.getItem("latitude") + "," + document.getElementById('landmarkSelect').value;
+                    
+                    localStorage.setItem(selectedSeat, coordinates);
+                    
                     form.submit();
                 } else {
                     alert("Incorrect passcode. Submission canceled.");
                 }
             });
+
+
         });
     </script>
 

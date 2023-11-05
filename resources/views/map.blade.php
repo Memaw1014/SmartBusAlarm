@@ -13,7 +13,6 @@
         #currentLocationButton {
             left: 20px;
         }
-        
         #backButton {
             left: 150px;
         }
@@ -48,7 +47,21 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.js"></script>
 
+    <script>
+    // Check Local Storage for values of SEAT NO. 1 and SEAT NO. 2
+    var seat1Value = localStorage.getItem("SEAT NO. 1");
+    var seat2Value = localStorage.getItem("SEAT NO. 2");
+    var seat3Value = localStorage.getItem("SEAT NO. 3");
+    var seat4Value = localStorage.getItem("SEAT NO. 4");
 
+    // Get references to the buttons
+    var backdisable = document.getElementById("backButton"); // Change "backButton" to the correct ID of SEAT NO. 1 button
+    // Disable buttons if Local Storage values are not empty
+        if (seat1Value && seat1Value.trim() !== "" && seat2Value && seat2Value.trim() !== "" && seat3Value && seat3Value.trim() !== "" && seat4Value && seat4Value.trim() !== "") {
+            backdisable.disabled = true;
+        }
+
+</script>
     <script>
         // Your custom JavaScript code here
         var map = L.map('map').setView([10.3346, 125.1709], 10); // Centered on Southern Leyte, adjusted zoom level
@@ -64,7 +77,30 @@
 
         // Add the selected landmark as a marker
         var selectedLandmark = @json($selectedLandmark);
-        addMarker(selectedLandmark.latitude, selectedLandmark.longitude, selectedLandmark.Landmark);
+        //addMarker(selectedLandmark.latitude, selectedLandmark.longitude, selectedLandmark.Landmark);
+
+        var key1 = "SEAT NO. 1";
+        if (localStorage.getItem(key1) !== null && localStorage.getItem(key1) !== ""){
+            var coordinates = localStorage.getItem("SEAT NO. 1").split(',');
+            addMarker(coordinates[1], coordinates[0], coordinates[2]);
+        }
+
+        var key2 = "SEAT NO. 2";
+        if (localStorage.getItem(key2) !== null && localStorage.getItem(key2) !== ""){
+            var coordinates = localStorage.getItem("SEAT NO. 2").split(',');
+            addMarker(coordinates[1], coordinates[0], coordinates[2]);
+        }
+        var key3 = "SEAT NO. 3";
+        if (localStorage.getItem(key3) !== null && localStorage.getItem(key3) !== ""){
+            var coordinates = localStorage.getItem("SEAT NO. 3").split(',');
+            addMarker(coordinates[1], coordinates[0], coordinates[2]);
+        }
+
+        var key4 = "SEAT NO. 4";
+        if (localStorage.getItem(key4) !== null && localStorage.getItem(key4) !== ""){
+            var coordinates = localStorage.getItem("SEAT NO. 4").split(',');
+            addMarker(coordinates[1], coordinates[0], coordinates[2]);
+        }
 
         // Create a route
         // Create a route
@@ -83,6 +119,7 @@
                 lineOptions: {
                     styles: [{ color: 'red', opacity: 0.7, weight: 7, interactive: false }]
                 },
+                draggableWaypoints: false, // Set the draggable option here
                 show: false, // Set this option to hide route instructions
                 fitSelectedRoutes: false // Disable automatic zoom adjustment
             }).addTo(map);
@@ -138,12 +175,30 @@
 
         // Add event listener to the BACK button
         document.getElementById("backButton").addEventListener("click", function () {
-            // Redirect back to the selection.blade.view URL
-            window.location.href = "http://127.0.0.1:8000";
+            var passcodeUsed = localStorage.getItem("passcodeUsed");
+
+            if (passcodeUsed === "123") {
+                // Redirect to selection.blade.php
+                window.location.href = "http://127.0.0.1:8000/1";
+            } else if (passcodeUsed === "456") {
+                // Redirect to selection2.blade.php
+                window.location.href = "http://127.0.0.1:8000/2";
+            } else {
+                alert("Passcode information not available. Cannot determine the destination.");
+            }
         });
+
         document.getElementById("historyButton").addEventListener("click", function () {
+        // Prompt the user for a password
+        var password = prompt("Please enter the password:");
+
+        // Check if the entered password is correct
+        if (password === "123") {
             // Redirect to the history.blade.php URL
             window.location.href = "http://127.0.0.1:8000/table";
+        } else {
+            alert("Incorrect password. Access denied.");
+        }
         });
 
         // Add an event listener to the map to stop click event propagation

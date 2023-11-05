@@ -11,13 +11,12 @@
             <h4 class=" fw-bold text-primary mb-5">
                 Let's get Started!
             </h4>
-            <form class="d-flex flex-column gap-3 w-100">
-                <a href="{{ route('selection') }}" class="btn btn-primary border-3 fw-bold">
+            <form class="d-flex flex-column gap-3 w-100" method="POST" action="{{ route('check.rfid') }}">
+                @csrf
+                <input type="text" name="rfid_password" placeholder="Enter RFID Password" id = "rfid_password" >
+                <button  id = "startButton" type="submit" class="btn btn-primary border-3 fw-bold">
                     Start Now
-                </a>
-                <a href="{{ route('instructions') }}" class="btn btn-outline-primary border-3 fw-bold">
-                    Learn How
-                </a>
+                </button>
             </form>
         </div>
 
@@ -32,10 +31,12 @@
             </div>
         </div>
     </div>
-
     <script>
-        document.getElementById('startNowButton').addEventListener('click', function() {
-            window.location.href = "{{ route('selection') }}";
+        document.getElementById("startButton").addEventListener("click", function () {
+            var rfidPassword = document.getElementById("rfid_password").value;
+            localStorage.setItem("passcodeUsed", rfidPassword);
         });
     </script>
+
+    
 @endsection
