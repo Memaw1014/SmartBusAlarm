@@ -47,7 +47,6 @@ return new class extends Migration
             'Higosoan', 'Tinago', 'Cambite', 'Iniguihan', 'San Agustin', 'Banday', 'Bogo', 'San Antonio', 'San Miguel', 'Maslog', 'San Roque', 
             'Looc', 'San Isidro', 'Canlupao'
         ];
-
         $barangayTO = array_map(function ($barangay) {
             return [
                 'Barangay' => $barangay,

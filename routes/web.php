@@ -38,3 +38,8 @@ Route::get('/mapass1', [DestinationController::class, 'map'])->name('map');
 Route::get('/mappass2', [DestinationController::class, 'map'])->name('map');
 Route::get('/table', [DestinationController::class, 'displayTable'])->name('show-table');
 Route::post('/check-rfid', [DestinationController::class, 'checkRFID'])->name('check.rfid');
+
+#get current location
+Route::post('/getcurrentlocation', [DestinationController::class, 'getCurrentLocation']);
+
+

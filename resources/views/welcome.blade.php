@@ -13,8 +13,8 @@
             </h4>
             <form class="d-flex flex-column gap-3 w-100" method="POST" action="{{ route('check.rfid') }}">
                 @csrf
-                <input type="text" name="rfid_password" placeholder="Enter RFID Password" id="rfid_password">
-                <button id="startButton" type="submit" class="btn btn-primary border-3 fw-bold">
+                <input type="password" name="rfid_password" placeholder="Enter RFID Password" id="rfid_password">
+                <button id="startButton" type="submit" class="btn btn-primary border-3 fw-bold"hidden>
                     Start Now
                 </button>
             </form>

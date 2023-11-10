@@ -7,8 +7,10 @@ use App\Models\from_municipalities;
 use App\Models\to_municipalities;
 use App\Models\TableForm;
 use App\Models\landmarks;
+use App\Models\CurrentLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 
 class DestinationController extends Controller
 {
@@ -83,6 +85,23 @@ class DestinationController extends Controller
                 return view('selection2');
             } else {
                 return view('error');
+            }
+        }
+        public function CurrentLocation(Request $request)
+        {
+            $currentLocation = CurrentLocation::updateorcreate(['u'=> 1],[
+                'longitude' => $request->long,
+                'latitude' => $request->lang,
+            ]);
+            if($currentLocation){
+                return response()->json(['message' => 'save' ]);
+            }
+        }
+        public function getCurrentLocation(Request $request)
+        {
+            $currentLocation = CurrentLocation::where("u" ,1)->first();
+            if($currentLocation){
+                return response()->json(['data' => $currentLocation ]);
             }
         }
 }

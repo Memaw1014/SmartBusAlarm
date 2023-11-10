@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Real-Time Map</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         /* Style to position the button at the bottom */
         .header-buttons {
@@ -47,22 +48,19 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.js"></script>
 
+   
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script>
-    // Check Local Storage for values of SEAT NO. 1 and SEAT NO. 2
-    var seat1Value = localStorage.getItem("SEAT NO. 1");
-    var seat2Value = localStorage.getItem("SEAT NO. 2");
-    var seat3Value = localStorage.getItem("SEAT NO. 3");
-    var seat4Value = localStorage.getItem("SEAT NO. 4");
 
-    // Get references to the buttons
-    var backdisable = document.getElementById("backButton"); // Change "backButton" to the correct ID of SEAT NO. 1 button
-    // Disable buttons if Local Storage values are not empty
-        if (seat1Value && seat1Value.trim() !== "" && seat2Value && seat2Value.trim() !== "" && seat3Value && seat3Value.trim() !== "" && seat4Value && seat4Value.trim() !== "") {
-            backdisable.disabled = true;
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
+        });
+        var longitude = '';
+        var latitude = '';
+       
 
-</script>
-    <script>
         // Your custom JavaScript code here
         var map = L.map('map').setView([10.3346, 125.1709], 10); // Centered on Southern Leyte, adjusted zoom level
 
@@ -103,37 +101,20 @@
         }
 
         // Create a route
-        // Create a route
-        
-
-        function createRoute(routeName, startCoords, endCoords) {
-            var start = L.latLng(startCoords[0], startCoords[1]);
-            var end = L.latLng(endCoords[0], endCoords[1]);
-
-            var route = L.Routing.control({
-                waypoints: [
-                    L.latLng(start),
-                    L.latLng(end)
-                ],
-                routeWhileDragging: true,
-                lineOptions: {
-                    styles: [{ color: 'red', opacity: 0.7, weight: 7, interactive: false }]
-                },
-                draggableWaypoints: false, // Set the draggable option here
-                show: false, // Set this option to hide route instructions
-                fitSelectedRoutes: false // Disable automatic zoom adjustment
-            }).addTo(map);
-        }
-
-
         function getUserLocation() {
             if ('geolocation' in navigator) {
+                getCurrentLocation()
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
                         var userLat = position.coords.latitude;
                         var userLng = position.coords.longitude;
-                        var userLocation = L.latLng(userLat, userLng);
+                        console.log('coor',userLat,userLng);
+                       // console.log('coor2',latitude,longitude);
 
+                        
+
+                       // var userLocation = L.latLng(userLat, userLng);
+                        var userLocation = L.latLng(latitude,longitude);
                         // Add a marker for the user's current location
                         var userMarker = L.marker(userLocation).addTo(map);
                         userMarker.bindPopup("Your Location").openPopup();
@@ -150,6 +131,42 @@
             }
         }
 
+        function createRoute(routeName, startCoords, endCoords) {
+            var startIcon = L.icon({
+                iconUrl: 'start-icon.png', // Replace with the URL of your custom start icon
+                iconSize: [32, 32], // Adjust the size of the icon as needed
+            });
+
+            var endIcon = L.icon({
+                iconUrl: 'end-icon.png', // Replace with the URL of your custom end icon
+                iconSize: [32, 32], // Adjust the size of the icon as needed
+            });
+
+            var start = L.latLng(startCoords[0], startCoords[1]);
+            var end = L.latLng(endCoords[0], endCoords[1]);
+
+            var route = L.Routing.control({
+                waypoints: [
+                    {
+                        latLng: start,
+                        icon: startIcon, // Use the custom start icon
+                        // You can also add other options like iconAnchor, popup, etc.
+                    },
+                    {
+                        latLng: end,
+                        icon: endIcon, // Use the custom end icon
+                        // You can also add other options like iconAnchor, popup, etc.
+                    }
+                ],
+                routeWhileDragging: true,
+                lineOptions: {
+                    styles: [{ color: 'red', opacity: 0.7, weight: 7, interactive: false }]
+                },
+                draggableWaypoints: false,
+                show: false,
+                fitSelectedRoutes: false
+            }).addTo(map);
+        }
 
 
         // Create routes to Sogod and Maasin
@@ -166,6 +183,55 @@
         }
         createRoutes();
 
+
+        function createRoutesNoSignal() {
+                createTextMarker("No Signal1", [10.347115636863771, 124.96777850174848], [10.314909342918405, 124.97474175643858], "No Signal1");
+                createTextMarker("No Signal2", [10.241566072276722, 124.97972676426492], [10.16721543096064, 124.99693621644334], "No Signal2");
+                createTextMarker("No Signal3", [10.130435144521742, 125.00777819984935], [10.035891204344082, 125.02094230453896], "No Signal3");
+                createTextMarker("No Signal4", [10.089373279625203, 124.9248845881228], [10.094848779603664, 124.90162887157325], "No Signal4", function() {
+                    getUserLocation();
+                });
+            }
+
+            function createTextMarker(title, startCoords, endCoords, text, onClick) {
+                createMarker(" " + title, startCoords);
+                createMarker(" " + title, endCoords);
+
+                function createMarker(markerTitle, coordinates) {
+                    var marker = L.marker(coordinates, {
+                        icon: L.divIcon({
+                            className: 'text-marker',
+                            html: markerTitle,
+                            iconSize: [50, 20] // Adjust the size as needed
+                        })
+                    }).addTo(map);
+
+                    if (onClick) {
+                        marker.on('click', onClick);
+                    }
+
+                    marker.bindPopup(markerTitle).openPopup();
+                }
+            }
+
+            // Add custom CSS for the text markers
+            var customCss = `
+                .text-marker {
+                    text-align: center;
+                    color: #000;
+                    font-weight: bold;
+                    font-size: 8px;
+                }
+            `;
+
+            var styleTag = document.createElement('style');
+            styleTag.type = 'text/css';
+            styleTag.appendChild(document.createTextNode(customCss));
+            document.head.appendChild(styleTag);
+
+            createRoutesNoSignal();
+
+
         // Call the createRoutes() function to create routes
         document.addEventListener("DOMContentLoaded", getUserLocation);
         // Add event listener to the "GET LOCATION" button
@@ -174,19 +240,34 @@
         });
 
         // Add event listener to the BACK button
-        document.getElementById("backButton").addEventListener("click", function () {
-            var passcodeUsed = localStorage.getItem("passcodeUsed");
+document.getElementById("backButton").addEventListener("click", function () {
+    var passcodeUsed = localStorage.getItem("passcodeUsed");
 
-            if (passcodeUsed === "123") {
-                // Redirect to selection.blade.php
-                window.location.href = "http://127.0.0.1:8000/1";
-            } else if (passcodeUsed === "456") {
-                // Redirect to selection2.blade.php
-                window.location.href = "http://127.0.0.1:8000/2";
-            } else {
-                alert("Passcode information not available. Cannot determine the destination.");
-            }
-        });
+    if (passcodeUsed === "123") {
+        var seat1Occupied = localStorage.getItem("SEAT NO. 1") && localStorage.getItem("SEAT NO. 1").trim() !== "";
+        var seat2Occupied = localStorage.getItem("SEAT NO. 2") && localStorage.getItem("SEAT NO. 2").trim() !== "";
+        
+        if (seat1Occupied && seat2Occupied) {
+            alert("Both SEAT NO. 1 and SEAT NO. 2 are occupied. You cannot go back.");
+        } else {
+            // Redirect to the destination if not occupied
+            window.location.href = "http://127.0.0.1:8000/1";
+        }
+    } else if (passcodeUsed === "456") {
+        var seat3Occupied = localStorage.getItem("SEAT NO. 3") && localStorage.getItem("SEAT NO. 3").trim() !== "";
+        var seat4Occupied = localStorage.getItem("SEAT NO. 4") && localStorage.getItem("SEAT NO. 4").trim() !== "";
+        
+        if (seat3Occupied && seat4Occupied) {
+            alert("Both SEAT NO. 3 and SEAT NO. 4 are occupied. You cannot go back.");
+        } else {
+            // Redirect to the destination if not occupied
+            window.location.href = "http://127.0.0.1:8000/2";
+        }
+    } else {
+        alert("Passcode information not available. Cannot determine the destination.");
+    }
+});
+
 
         document.getElementById("historyButton").addEventListener("click", function () {
         // Prompt the user for a password
@@ -215,6 +296,30 @@
             // Your getUserLocation() code here
           
         });
+
+
+
+
+        function getCurrentLocation(){
+            $.ajax({
+                url: "/getcurrentlocation",
+                type: "post",
+                // data: values ,
+                success: function (response) {
+                    console.log('location:',response);
+                    if(response){
+                        longitude =  JSON.parse(response.data.longitude)
+                        latitude = JSON.parse(response.data.latitude)
+                    }
+
+
+                // You will get response from your PHP page (what you echo or print)
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                  console.log(textStatus, errorThrown);
+                }
+            });
+        }
 
 
     </script>
@@ -250,7 +355,6 @@
                     }
                 }).addTo(map);
             }
-        </script>
-
+        </script>*
 </body>
 </html>
