@@ -59,6 +59,7 @@
         });
         var longitude = '';
         var latitude = '';
+        var radiusCircle;
        
 
         // Your custom JavaScript code here
@@ -111,7 +112,17 @@
                         console.log('coor',userLat,userLng);
                        // console.log('coor2',latitude,longitude);
 
-                        
+                       
+                       if (!radiusCircle) {
+                        radiusCircle = L.circle([latitude, longitude], {
+                            color: 'blue',   // Adjust color as needed
+                            fillColor: '#3388ff', // Adjust fill color as needed
+                            fillOpacity: 0.3,
+                            radius: 500,  // Adjust radius in meters as needed
+                        }).addTo(map);
+                    } else {
+                        radiusCircle.setLatLng([latitude, longitude]);
+                    }
 
                        // var userLocation = L.latLng(userLat, userLng);
                         var userLocation = L.latLng(latitude,longitude);

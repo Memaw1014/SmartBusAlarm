@@ -25,6 +25,7 @@
                 <a class="navbar-brand text-light" href="{{ url('/') }}">
                     {{ config('app.name', 'SLSU Bus') }}
                 </a>
+                <a href="http://127.0.0.1:8000/login" class="btn btn-secondary mt-3">Admin</a>
 
                 <!--
                 <button class="navbar-toggler bg-light " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

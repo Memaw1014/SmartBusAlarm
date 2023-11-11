@@ -13,14 +13,13 @@
             </h4>
             <form class="d-flex flex-column gap-3 w-100" method="POST" action="{{ route('check.rfid') }}">
                 @csrf
-                <input type="password" name="rfid_password" placeholder="Enter RFID Password" id="rfid_password">
+                <input type="password" name="rfid_password" placeholder="Scan RFID Here" id="rfid_password">
                 <button id="startButton" type="submit" class="btn btn-primary border-3 fw-bold"hidden>
                     Start Now
                 </button>
             </form>
 
             <!-- Add the admin button to redirect to the admin login page -->
-            <a href="http://127.0.0.1:8000/login" class="btn btn-secondary mt-3">Admin</a>
         </div>
 
         <div class="card-footer bg-white">
